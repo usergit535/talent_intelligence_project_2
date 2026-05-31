@@ -1,0 +1,215 @@
+20:57:21  INFO      scraper.main                    🔍 Initiating dynamic source discovery phase across 4 networks...
+20:57:21  INFO      scraper.company_discovery       🌐 Sourcing corporate targets directly via YC Hub: https://www.ycombinator.com/companies?isHiring=true&sortBy=top&batch=&top_company=false
+20:58:14  INFO      scraper.company_discovery          ↳ Core structural interface parsing hit: Found 120 data blocks.
+20:58:16  INFO      scraper.company_discovery       📊 Extraction processing run finalized. Transferred 100 entities down to verification loops.
+20:58:16  INFO      scraper.main                    🚀 Launching Master Talent Intelligence Processing Loop...
+20:58:16  INFO      scraper.main                    📋 Ingested 100 target profiles from the ingestion pool.
+20:58:16  INFO      scraper.main                    🌐 Spinning up Chromium Instance (Headless=True)
+20:58:17  INFO      scraper.main                    🔄 [1/100] Processing Data Sweep -> 'BillionToOneMenlo Park, CA, USA'
+20:58:17  WARNING   scraper.hiring_checker            [BillionToOneMenlo Park, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://billiontoonemenloparkcausa.com/
+Call log:
+  - navigating to "https://billiontoonemenloparkcausa.com/", waiting until "domcontentloaded"
+
+20:58:31  INFO      scraper.main                    ✨ [1/100] Synchronized updates finalized for 'BillionToOneMenlo Park, CA, USA'
+20:58:31  INFO      scraper.main                    🔄 [2/100] Processing Data Sweep -> 'MasonSeattle, WA, USA'
+20:58:32  WARNING   scraper.hiring_checker            [MasonSeattle, WA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://masonseattlewausa.com/
+Call log:
+  - navigating to "https://masonseattlewausa.com/", waiting until "domcontentloaded"
+
+20:58:43  INFO      scraper.main                    ✨ [2/100] Synchronized updates finalized for 'MasonSeattle, WA, USA'
+20:58:43  INFO      scraper.main                    🔄 [3/100] Processing Data Sweep -> 'TovalaChicago, IL, USA'
+20:58:43  WARNING   scraper.hiring_checker            [TovalaChicago, IL, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://tovalachicagoilusa.com/
+Call log:
+  - navigating to "https://tovalachicagoilusa.com/", waiting until "domcontentloaded"
+
+20:58:54  INFO      scraper.main                    ✨ [3/100] Synchronized updates finalized for 'TovalaChicago, IL, USA'
+20:58:54  INFO      scraper.main                    🔄 [4/100] Processing Data Sweep -> 'iSono HealthSan Francisco, CA, USA'
+20:58:54  WARNING   scraper.hiring_checker            [iSono HealthSan Francisco, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://isonohealthsanfranciscocausa.com/
+Call log:
+  - navigating to "https://isonohealthsanfranciscocausa.com/", waiting until "domcontentloaded"
+
+20:59:05  INFO      scraper.main                    ✨ [4/100] Synchronized updates finalized for 'iSono HealthSan Francisco, CA, USA'
+20:59:05  INFO      scraper.main                    🔄 [5/100] Processing Data Sweep -> 'DeepgramSan Francisco, CA, USA'
+20:59:06  WARNING   scraper.hiring_checker            [DeepgramSan Francisco, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://deepgramsanfranciscocausa.com/
+Call log:
+  - navigating to "https://deepgramsanfranciscocausa.com/", waiting until "domcontentloaded"
+
+20:59:17  INFO      scraper.main                    ✨ [5/100] Synchronized updates finalized for 'DeepgramSan Francisco, CA, USA'
+20:59:17  INFO      scraper.main                    🔄 [6/100] Processing Data Sweep -> 'SOUNDBOKSCopenhagen, Denmark'
+20:59:17  WARNING   scraper.hiring_checker            [SOUNDBOKSCopenhagen, Denmark] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://soundbokscopenhagendenmark.com/
+Call log:
+  - navigating to "https://soundbokscopenhagendenmark.com/", waiting until "domcontentloaded"
+
+20:59:28  INFO      scraper.main                    ✨ [6/100] Synchronized updates finalized for 'SOUNDBOKSCopenhagen, Denmark'
+20:59:28  INFO      scraper.main                    🔄 [7/100] Processing Data Sweep -> 'LatticeSan Francisco, CA, USA'
+20:59:28  WARNING   scraper.hiring_checker            [LatticeSan Francisco, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://latticesanfranciscocausa.com/
+Call log:
+  - navigating to "https://latticesanfranciscocausa.com/", waiting until "domcontentloaded"
+
+20:59:42  INFO      scraper.main                    ✨ [7/100] Synchronized updates finalized for 'LatticeSan Francisco, CA, USA'
+20:59:42  INFO      scraper.main                    🔄 [8/100] Processing Data Sweep -> 'MuxSan Francisco, CA, USA'
+20:59:43  WARNING   scraper.hiring_checker            [MuxSan Francisco, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://muxsanfranciscocausa.com/
+Call log:
+  - navigating to "https://muxsanfranciscocausa.com/", waiting until "domcontentloaded"
+
+20:59:54  INFO      scraper.main                    ✨ [8/100] Synchronized updates finalized for 'MuxSan Francisco, CA, USA'
+20:59:54  INFO      scraper.main                    🔄 [9/100] Processing Data Sweep -> 'Human InterestSan Francisco, CA, USA'
+20:59:54  WARNING   scraper.hiring_checker            [Human InterestSan Francisco, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://humaninterestsanfranciscocausa.com/
+Call log:
+  - navigating to "https://humaninterestsanfranciscocausa.com/", waiting until "domcontentloaded"
+
+21:00:05  INFO      scraper.main                    ✨ [9/100] Synchronized updates finalized for 'Human InterestSan Francisco, CA, USA'
+21:00:05  INFO      scraper.main                    🔄 [10/100] Processing Data Sweep -> 'Eight SleepNew York, NY, USA'
+21:00:05  WARNING   scraper.hiring_checker            [Eight SleepNew York, NY, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://eightsleepnewyorknyusa.com/
+Call log:
+  - navigating to "https://eightsleepnewyorknyusa.com/", waiting until "domcontentloaded"
+
+21:00:17  INFO      scraper.main                    ✨ [10/100] Synchronized updates finalized for 'Eight SleepNew York, NY, USA'
+21:00:17  INFO      scraper.main                    🔄 [11/100] Processing Data Sweep -> 'InstaworkSan Francisco, CA, USA'
+21:00:17  WARNING   scraper.hiring_checker            [InstaworkSan Francisco, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://instaworksanfranciscocausa.com/
+Call log:
+  - navigating to "https://instaworksanfranciscocausa.com/", waiting until "domcontentloaded"
+
+21:00:28  INFO      scraper.main                    ✨ [11/100] Synchronized updates finalized for 'InstaworkSan Francisco, CA, USA'
+21:00:28  INFO      scraper.main                    🔄 [12/100] Processing Data Sweep -> 'BitmovinSan Francisco, CA, USA'
+21:00:28  WARNING   scraper.hiring_checker            [BitmovinSan Francisco, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://bitmovinsanfranciscocausa.com/
+Call log:
+  - navigating to "https://bitmovinsanfranciscocausa.com/", waiting until "domcontentloaded"
+
+21:00:40  INFO      scraper.main                    ✨ [12/100] Synchronized updates finalized for 'BitmovinSan Francisco, CA, USA'
+21:00:40  INFO      scraper.main                    🔄 [13/100] Processing Data Sweep -> 'XenditJakarta, Jakarta, Indonesia'
+21:00:40  WARNING   scraper.hiring_checker            [XenditJakarta, Jakarta, Indonesia] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://xenditjakartajakartaindonesia.com/
+Call log:
+  - navigating to "https://xenditjakartajakartaindonesia.com/", waiting until "domcontentloaded"
+
+21:00:51  INFO      scraper.main                    ✨ [13/100] Synchronized updates finalized for 'XenditJakarta, Jakarta, Indonesia'
+21:00:51  INFO      scraper.main                    🔄 [14/100] Processing Data Sweep -> 'Shape (ShapeScale)San Francisco, CA, USA'
+21:00:51  WARNING   scraper.hiring_checker            [Shape (ShapeScale)San Francisco, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://shapeshapescalesanfranciscocausa.com/
+Call log:
+  - navigating to "https://shapeshapescalesanfranciscocausa.com/", waiting until "domcontentloaded"
+
+21:01:02  INFO      scraper.main                    ✨ [14/100] Synchronized updates finalized for 'Shape (ShapeScale)San Francisco, CA, USA'
+21:01:02  INFO      scraper.main                    🔄 [15/100] Processing Data Sweep -> 'Circle Medical'
+21:01:22  INFO      scraper.main                    ✨ [15/100] Synchronized updates finalized for 'Circle Medical'
+21:01:22  INFO      scraper.main                    🔄 [16/100] Processing Data Sweep -> 'GiveCampusWashington, DC, USA'
+21:01:23  WARNING   scraper.hiring_checker            [GiveCampusWashington, DC, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://givecampuswashingtondcusa.com/
+Call log:
+  - navigating to "https://givecampuswashingtondcusa.com/", waiting until "domcontentloaded"
+
+21:01:34  INFO      scraper.main                    ✨ [16/100] Synchronized updates finalized for 'GiveCampusWashington, DC, USA'
+21:01:34  INFO      scraper.main                    🔄 [17/100] Processing Data Sweep -> 'Drip CapitalMH, India'
+21:01:35  WARNING   scraper.hiring_checker            [Drip CapitalMH, India] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://dripcapitalmhindia.com/
+Call log:
+  - navigating to "https://dripcapitalmhindia.com/", waiting until "domcontentloaded"
+
+21:01:46  INFO      scraper.main                    ✨ [17/100] Synchronized updates finalized for 'Drip CapitalMH, India'
+21:01:46  INFO      scraper.main                    🔄 [18/100] Processing Data Sweep -> 'Verge GenomicsSan Francisco, CA, USA'
+21:01:46  WARNING   scraper.hiring_checker            [Verge GenomicsSan Francisco, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://vergegenomicssanfranciscocausa.com/
+Call log:
+  - navigating to "https://vergegenomicssanfranciscocausa.com/", waiting until "domcontentloaded"
+
+21:01:57  INFO      scraper.main                    ✨ [18/100] Synchronized updates finalized for 'Verge GenomicsSan Francisco, CA, USA'
+21:01:57  INFO      scraper.main                    🔄 [19/100] Processing Data Sweep -> 'AgileMDSan Francisco, CA, USA'
+21:01:57  WARNING   scraper.hiring_checker            [AgileMDSan Francisco, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://agilemdsanfranciscocausa.com/
+Call log:
+  - navigating to "https://agilemdsanfranciscocausa.com/", waiting until "domcontentloaded"
+
+21:02:08  INFO      scraper.main                    ✨ [19/100] Synchronized updates finalized for 'AgileMDSan Francisco, CA, USA'
+21:02:08  INFO      scraper.main                    🔄 [20/100] Processing Data Sweep -> 'ReachRedwood City, CA, USA'
+21:02:08  WARNING   scraper.hiring_checker            [ReachRedwood City, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://reachredwoodcitycausa.com/
+Call log:
+  - navigating to "https://reachredwoodcitycausa.com/", waiting until "domcontentloaded"
+
+21:02:20  INFO      scraper.main                    ✨ [20/100] Synchronized updates finalized for 'ReachRedwood City, CA, USA'
+21:02:20  INFO      scraper.main                    🔄 [21/100] Processing Data Sweep -> 'Branch8Kowloon, Hong Kong'
+21:02:20  WARNING   scraper.hiring_checker            [Branch8Kowloon, Hong Kong] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://branch8kowloonhongkong.com/
+Call log:
+  - navigating to "https://branch8kowloonhongkong.com/", waiting until "domcontentloaded"
+
+21:02:31  INFO      scraper.main                    ✨ [21/100] Synchronized updates finalized for 'Branch8Kowloon, Hong Kong'
+21:02:31  INFO      scraper.main                    🔄 [22/100] Processing Data Sweep -> 'Heroic LabsLondon, England, United Kingdom'
+21:02:31  WARNING   scraper.hiring_checker            [Heroic LabsLondon, England, United Kingdom] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://heroiclabslondonenglandunitedkingdom.com/
+Call log:
+  - navigating to "https://heroiclabslondonenglandunitedkingdom.com/", waiting until "domcontentloaded"
+
+21:02:42  INFO      scraper.main                    ✨ [22/100] Synchronized updates finalized for 'Heroic LabsLondon, England, United Kingdom'
+21:02:42  INFO      scraper.main                    🔄 [23/100] Processing Data Sweep -> 'SnapMagicSan Francisco, CA, USA'
+21:02:43  WARNING   scraper.hiring_checker            [SnapMagicSan Francisco, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://snapmagicsanfranciscocausa.com/
+Call log:
+  - navigating to "https://snapmagicsanfranciscocausa.com/", waiting until "domcontentloaded"
+
+21:02:54  INFO      scraper.main                    ✨ [23/100] Synchronized updates finalized for 'SnapMagicSan Francisco, CA, USA'
+21:02:54  INFO      scraper.main                    🔄 [24/100] Processing Data Sweep -> 'Scope ARSan Francisco, CA, USA'
+21:02:54  WARNING   scraper.hiring_checker            [Scope ARSan Francisco, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://scopearsanfranciscocausa.com/
+Call log:
+  - navigating to "https://scopearsanfranciscocausa.com/", waiting until "domcontentloaded"
+
+21:03:05  INFO      scraper.main                    ✨ [24/100] Synchronized updates finalized for 'Scope ARSan Francisco, CA, USA'
+21:03:05  INFO      scraper.main                    🔄 [25/100] Processing Data Sweep -> 'GemnoteSan Leandro, CA, USA'
+21:03:05  WARNING   scraper.hiring_checker            [GemnoteSan Leandro, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://gemnotesanleandrocausa.com/
+Call log:
+  - navigating to "https://gemnotesanleandrocausa.com/", waiting until "domcontentloaded"
+
+21:03:16  INFO      scraper.main                    ✨ [25/100] Synchronized updates finalized for 'GemnoteSan Leandro, CA, USA'
+21:03:16  INFO      scraper.main                    🔄 [26/100] Processing Data Sweep -> 'New StoryAtlanta, GA, USA'
+21:03:17  WARNING   scraper.hiring_checker            [New StoryAtlanta, GA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://newstoryatlantagausa.com/
+Call log:
+  - navigating to "https://newstoryatlantagausa.com/", waiting until "domcontentloaded"
+
+21:03:28  INFO      scraper.main                    ✨ [26/100] Synchronized updates finalized for 'New StoryAtlanta, GA, USA'
+21:03:28  INFO      scraper.main                    🔄 [27/100] Processing Data Sweep -> 'IroncladSan Francisco, CA, USA'
+21:03:28  WARNING   scraper.hiring_checker            [IroncladSan Francisco, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://ironcladsanfranciscocausa.com/
+Call log:
+  - navigating to "https://ironcladsanfranciscocausa.com/", waiting until "domcontentloaded"
+
+21:03:39  INFO      scraper.main                    ✨ [27/100] Synchronized updates finalized for 'IroncladSan Francisco, CA, USA'
+21:03:39  INFO      scraper.main                    🔄 [28/100] Processing Data Sweep -> 'LuggSan Francisco, CA, USA'
+21:03:40  WARNING   scraper.hiring_checker            [LuggSan Francisco, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://luggsanfranciscocausa.com/
+Call log:
+  - navigating to "https://luggsanfranciscocausa.com/", waiting until "domcontentloaded"
+
+21:03:51  INFO      scraper.main                    ✨ [28/100] Synchronized updates finalized for 'LuggSan Francisco, CA, USA'
+21:03:51  INFO      scraper.main                    🔄 [29/100] Processing Data Sweep -> 'MashginPalo Alto, CA, USA'
+21:03:51  WARNING   scraper.hiring_checker            [MashginPalo Alto, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://mashginpaloaltocausa.com/
+Call log:
+  - navigating to "https://mashginpaloaltocausa.com/", waiting until "domcontentloaded"
+
+21:04:02  INFO      scraper.main                    ✨ [29/100] Synchronized updates finalized for 'MashginPalo Alto, CA, USA'
+21:04:02  INFO      scraper.main                    🔄 [30/100] Processing Data Sweep -> 'QuartzyHayward, CA, USA'
+21:04:02  WARNING   scraper.hiring_checker            [QuartzyHayward, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://quartzyhaywardcausa.com/
+Call log:
+  - navigating to "https://quartzyhaywardcausa.com/", waiting until "domcontentloaded"
+
+21:04:13  INFO      scraper.main                    ✨ [30/100] Synchronized updates finalized for 'QuartzyHayward, CA, USA'
+21:04:13  INFO      scraper.main                    🔄 [31/100] Processing Data Sweep -> 'Tara AISan Francisco, CA, USA'
+21:04:14  WARNING   scraper.hiring_checker            [Tara AISan Francisco, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://taraaisanfranciscocausa.com/
+Call log:
+  - navigating to "https://taraaisanfranciscocausa.com/", waiting until "domcontentloaded"
+
+21:04:25  INFO      scraper.main                    ✨ [31/100] Synchronized updates finalized for 'Tara AISan Francisco, CA, USA'
+21:04:25  INFO      scraper.main                    🔄 [32/100] Processing Data Sweep -> 'TabLondon, England, United Kingdom'
+21:04:25  WARNING   scraper.hiring_checker            [TabLondon, England, United Kingdom] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://tablondonenglandunitedkingdom.com/
+Call log:
+  - navigating to "https://tablondonenglandunitedkingdom.com/", waiting until "domcontentloaded"
+
+21:04:37  INFO      scraper.main                    ✨ [32/100] Synchronized updates finalized for 'TabLondon, England, United Kingdom'
+21:04:37  INFO      scraper.main                    🔄 [33/100] Processing Data Sweep -> 'StreakSan Francisco, CA, USA'
+21:04:37  WARNING   scraper.hiring_checker            [StreakSan Francisco, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://streaksanfranciscocausa.com/
+Call log:
+  - navigating to "https://streaksanfranciscocausa.com/", waiting until "domcontentloaded"
+
+21:04:48  INFO      scraper.main                    ✨ [33/100] Synchronized updates finalized for 'StreakSan Francisco, CA, USA'
+21:04:48  INFO      scraper.main                    🔄 [34/100] Processing Data Sweep -> 'GiveffectNew York, NY, USA'
+21:04:48  WARNING   scraper.hiring_checker            [GiveffectNew York, NY, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://giveffectnewyorknyusa.com/
+Call log:
+  - navigating to "https://giveffectnewyorknyusa.com/", waiting until "domcontentloaded"
+
+21:14:45  INFO      scraper.main                    ✨ [34/100] Synchronized updates finalized for 'GiveffectNew York, NY, USA'
+21:14:45  INFO      scraper.main                    🔄 [35/100] Processing Data Sweep -> 'TempoSan Francisco, CA, USA'
+21:14:45  WARNING   scraper.hiring_checker            [TempoSan Francisco, CA, USA] homepage load error: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://temposanfranciscocausa.com/
+Call log:
+  - navigating to "https://temposanfranciscocausa.com/", waiting until "domcontentloaded"
+
+21:14:56  INFO      scraper.main                    ✨ [35/100] Synchronized updates finalized for 'TempoSan Francisco, CA, USA'
+21:14:56  INFO      scraper.main                    🔄 [36/100] Processing Data Sweep -> 'BankjoyTroy, MI, USA'
+21:14:56  WARNING   scraper.hiring_checker            [BankjoyTroy, MI, USA] homepage load error: Page.goto: Target page, context or browser has been closed

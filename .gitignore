@@ -1,0 +1,12 @@
+# Local data outputs
+output/
+*.xlsx
+*.json
+*.csv
+
+# Python environments and caches
+__pycache__/
+*.pyc
+.env
+venv/
+.pytest_cache/
