@@ -69,7 +69,6 @@ def _blank(name: str = "N/A") -> dict:
         "instagram_url": "N/A",
         "youtube_url":   "N/A",
         "description":   "N/A",
-        "funding_date":  "N/A",
         "source_url":    "N/A",
     }
 
