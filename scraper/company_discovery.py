@@ -76,7 +76,7 @@ def _blank(name: str = "N/A") -> dict:
 def _enrich_single_profile_thread_safe(record: dict) -> dict:
     """
     Standalone isolated worker task: Spins up its own sync playwright context
-    and uses structural text-anchors to grab elements without relying on broken class names.
+    and uses structural text-anchors to grab elements.
     """
     source_url = record.get("source_url", "N/A")
     if not source_url or source_url == "N/A":
@@ -89,24 +89,37 @@ def _enrich_single_profile_thread_safe(record: dict) -> dict:
             ctx = browser.new_context(user_agent=ua, locale="en-US")
             profile_page = ctx.new_page()
             
-            # Wait fully for network data to ensure modern React hydration finishes
             profile_page.set_default_timeout(25000)
             profile_page.goto(source_url, wait_until="networkidle")
             profile_page.wait_for_timeout(1000)
 
-            # 🟢 1. Extract Genuine Company Website URL using Structural Text Matches
-            # Finds an anchor tag whose text content looks like a URL or is located next to social media layouts
-            sidebar_links = profile_page.locator("a[href^='http']").all()
-            for link in sidebar_links:
+            # --- SURGICAL SCOPING ---
+            # Isolate the main profile container to avoid picking up global header links
+            main_scope = profile_page.locator("div.flex.flex-row.flex-nowrap, #company-profile, div.space-y-5").first
+            target = main_scope if main_scope.count() > 0 else profile_page.locator("body")
+
+            # 🟢 1. STRICT WEBSITE & CAREERS EXTRACTION
+            all_links = target.locator("a[href^='http']").all()
+            
+            # Blacklist to ignore YC internal links and social media
+            strict_blacklist = [
+                "ycombinator.com", "startupschool.org", "hackernews", "ycvc", 
+                "linkedin.com", "twitter.com", "x.com", "github.com", 
+                "facebook.com", "instagram.com", "youtube.com", "wa.me"
+            ]
+            
+            for link in all_links:
                 href = link.get_attribute("href") or ""
-                # Filter out sharing platforms and focus exclusively on corporate outlinks
-                if href and not any(x in href for x in ["ycombinator.com", "linkedin.com", "twitter.com", "github.com", "facebook.com"]):
-                    record["website"] = href
-                    record["careers_page"] = f"{href.rstrip('/')}/careers"
+                href_lower = href.lower()
+                
+                # If the link doesn't contain any blacklisted keywords, it's the company site
+                if href and not any(domain in href_lower for domain in strict_blacklist):
+                    clean_url = href.split("?")[0].rstrip("/")
+                    record["website"] = clean_url
+                    record["careers_page"] = f"{clean_url}/careers"
                     break
 
-            # 🟢 2. Extract Precise Headquarters Location Text via Tag Anchors
-            # Looks for bold identifiers or explicit sidebar detail headers
+            # 🟢 2. HQ LOCATION EXTRACTION (Preserved)
             loc_candidates = [
                 profile_page.locator("span:has-text('Location:') + span"),
                 profile_page.locator("div:has-text('Location') + div"),
@@ -119,8 +132,7 @@ def _enrich_single_profile_thread_safe(record: dict) -> dict:
                         record["headquarters"] = raw_hq
                         break
 
-            # 🟢 3. Extract Number of Jobs & Active Hiring Roles List
-            # Targets job layout anchors by looking for subpaths containing '/jobs' or text matching titles
+            # 🟢 3. JOBS EXTRACTION (Preserved)
             job_links = profile_page.locator("a[href*='/jobs'], [class*='job'] a").all()
             roles = []
             for link in job_links:
@@ -134,21 +146,9 @@ def _enrich_single_profile_thread_safe(record: dict) -> dict:
                 record["job_roles"] = roles[:4]
                 record["hiring_status"] = "Actively Hiring"
             else:
-                # Secondary selector pass looking for direct structural blocks
-                fallback_jobs = profile_page.locator("div:has-text('Open Roles') ~ div a").all()
-                for fb in fallback_jobs:
-                    txt = fb.inner_text().strip()
-                    if txt and txt not in roles:
-                        roles.append(txt)
-                
-                if roles:
-                    record["open_jobs"] = len(roles)
-                    record["job_roles"] = roles[:4]
-                    record["hiring_status"] = "Actively Hiring"
-                else:
-                    record["open_jobs"] = 0
-                    record["job_roles"] = ["None Listed"]
-                    record["hiring_status"] = "No Active Openings"
+                record["open_jobs"] = 0
+                record["job_roles"] = ["None Listed"]
+                record["hiring_status"] = "No Active Openings"
 
             browser.close()
         except Exception:
@@ -247,8 +247,7 @@ def discover_companies() -> list[dict]:
 
             browser.close()
 
-            # ⚡ HIGH DURABILITY CONCURRENT EXTRACTION ENGINE
-            log.info(f"   ⚡ Processing {len(initial_records)} filtered profiles concurrently with durable text matching...")
+            log.info(f"   ⚡ Processing {len(initial_records)} filtered profiles concurrently with surgical URL extraction...")
             final_records = []
             
             with ThreadPoolExecutor(max_workers=3) as executor:
