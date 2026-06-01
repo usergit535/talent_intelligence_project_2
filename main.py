@@ -6,6 +6,7 @@ and loops each company through verification pipeline layers.
 
 import os
 import sys
+
 # Force Python to look inside the local workspace path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -67,6 +68,9 @@ def run_pipeline(seed_companies: list[dict]):
         log.info("扫 Commencing post-processing data validation and consolidation...")
         cleaned_records = validate_and_deduplicate(raw_enriched_dataset)
         
+        # 🎯 CRITICAL GITHUB ACTIONS FIX: Force creation of the output folder path safely
+        os.makedirs("output", exist_ok=True)
+        
         log.info("📊 Formatting corporate documentation models...")
         excel_out = export_excel(cleaned_records)
         json_out = export_json(cleaned_records)
@@ -90,5 +94,4 @@ if __name__ == "__main__":
             
     except KeyboardInterrupt:
         log.warning("\n⚠️ Execution context killed via terminal signal. Exiting.")
-        sys.path.append(os.path.dirname(os.path.abspath(__file__)))
         sys.exit(1)
