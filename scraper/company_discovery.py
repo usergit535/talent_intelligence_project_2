@@ -1,14 +1,15 @@
 """
 scraper/company_discovery.py
 Targeted Corporate Discovery Engine - Pulls live data from YCombinator,
-performs a staggered deep profile validation pass to extract authentic company domains,
-hiring matrices, and live openings while protecting the execution stack from cloud blocks.
+performs a highly isolated text-based selector sweep to extract real domains,
+hiring matrices, and live openings using highly durable text anchors.
 """
 
 from __future__ import annotations
 import re
 import random
-from playwright.sync_api import Page, sync_playwright
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from playwright.sync_api import sync_playwright
 from config.config import HEADLESS, MAX_COMPANIES, YC_URL, get_random_user_agent
 from scraper.logger import get_logger
 
@@ -72,66 +73,91 @@ def _blank(name: str = "N/A") -> dict:
         "source_url":    "N/A",
     }
 
-def _deep_enrich_profile(ctx, source_url: str, record: dict) -> None:
+def _enrich_single_profile_thread_safe(record: dict) -> dict:
     """
-    Opens the company profile page with strict timeouts and anti-bot mitigation
-    to extract true structural data without breaking the parent workflow runner.
+    Standalone isolated worker task: Spins up its own sync playwright context
+    and uses structural text-anchors to grab elements without relying on broken class names.
     """
+    source_url = record.get("source_url", "N/A")
     if not source_url or source_url == "N/A":
-        return
+        return record
 
-    profile_page = ctx.new_page()
-    try:
-        # Strict context timeout configuration to prevent pipeline freezes
-        profile_page.set_default_timeout(15000)
-        profile_page.goto(source_url, wait_until="domcontentloaded")
-        
-        # Human-like staggered delay to protect against scraping blocks
-        profile_page.wait_for_timeout(random.randint(1500, 3500))
+    with sync_playwright() as pw:
+        try:
+            ua = get_random_user_agent()
+            browser = pw.chromium.launch(headless=True)
+            ctx = browser.new_context(user_agent=ua, locale="en-US")
+            profile_page = ctx.new_page()
+            
+            # Wait fully for network data to ensure modern React hydration finishes
+            profile_page.set_default_timeout(25000)
+            profile_page.goto(source_url, wait_until="networkidle")
+            profile_page.wait_for_timeout(1000)
 
-        # 🟢 1. Extract Real External Company Website Link
-        # Looks for the prominent URL anchors on the YC company sidebar card
-        website_loc = profile_page.locator("div.space-y-0.5 a, a[class*='website-link'], div.sidebar-section a[href^='http']").first
-        if website_loc.count() > 0:
-            real_web = website_loc.get_attribute("href") or ""
-            if real_web and "ycombinator.com" not in real_web:
-                record["website"] = real_web
-                record["careers_page"] = f"{real_web.rstrip('/')}/careers"
+            # 🟢 1. Extract Genuine Company Website URL using Structural Text Matches
+            # Finds an anchor tag whose text content looks like a URL or is located next to social media layouts
+            sidebar_links = profile_page.locator("a[href^='http']").all()
+            for link in sidebar_links:
+                href = link.get_attribute("href") or ""
+                # Filter out sharing platforms and focus exclusively on corporate outlinks
+                if href and not any(x in href for x in ["ycombinator.com", "linkedin.com", "twitter.com", "github.com", "facebook.com"]):
+                    record["website"] = href
+                    record["careers_page"] = f"{href.rstrip('/')}/careers"
+                    break
 
-        # 🟢 2. Extract Precise Structural Headquarters Location
-        loc_element = profile_page.locator("span:has-text('Location:') + span, div:has-text('Location') + div, .sidebar-section:has-text('Location')")
-        if loc_element.count() > 0:
-            raw_hq = loc_element.first.inner_text().replace("Location:", "").strip()
-            if raw_hq:
-                record["headquarters"] = raw_hq
+            # 🟢 2. Extract Precise Headquarters Location Text via Tag Anchors
+            # Looks for bold identifiers or explicit sidebar detail headers
+            loc_candidates = [
+                profile_page.locator("span:has-text('Location:') + span"),
+                profile_page.locator("div:has-text('Location') + div"),
+                profile_page.locator("span:has-text('Based in')")
+            ]
+            for candidate in loc_candidates:
+                if candidate.count() > 0:
+                    raw_hq = candidate.first.inner_text().replace("Location:", "").strip()
+                    if raw_hq:
+                        record["headquarters"] = raw_hq
+                        break
 
-        # 🟢 3. Extract Open Job Elements & Live Hiring Roles
-        job_cards = profile_page.locator("div.job-name a, [class*='job-title'], a[href*='/jobs/'], div.flex-grow.space-y-1 a")
-        job_count = job_cards.count()
-        
-        if job_count > 0:
-            record["open_jobs"] = job_count
+            # 🟢 3. Extract Number of Jobs & Active Hiring Roles List
+            # Targets job layout anchors by looking for subpaths containing '/jobs' or text matching titles
+            job_links = profile_page.locator("a[href*='/jobs'], [class*='job'] a").all()
             roles = []
-            for i in range(min(job_count, 4)):
-                role_text = job_cards.nth(i).inner_text().strip()
-                if role_text and role_text not in roles:
-                    roles.append(role_text)
-            record["job_roles"] = roles
-            record["hiring_status"] = "Actively Hiring"
-        else:
-            # Fallback evaluation checks
-            record["open_jobs"] = 0
-            record["job_roles"] = ["None Listed"]
-            record["hiring_status"] = "No Active Openings"
+            for link in job_links:
+                role_text = link.inner_text().strip()
+                if role_text and len(role_text) > 4 and not any(x in role_text.lower() for x in ["view", "apply", "jobs", "hiring"]):
+                    if role_text not in roles:
+                        roles.append(role_text)
+            
+            if roles:
+                record["open_jobs"] = len(roles)
+                record["job_roles"] = roles[:4]
+                record["hiring_status"] = "Actively Hiring"
+            else:
+                # Secondary selector pass looking for direct structural blocks
+                fallback_jobs = profile_page.locator("div:has-text('Open Roles') ~ div a").all()
+                for fb in fallback_jobs:
+                    txt = fb.inner_text().strip()
+                    if txt and txt not in roles:
+                        roles.append(txt)
+                
+                if roles:
+                    record["open_jobs"] = len(roles)
+                    record["job_roles"] = roles[:4]
+                    record["hiring_status"] = "Actively Hiring"
+                else:
+                    record["open_jobs"] = 0
+                    record["job_roles"] = ["None Listed"]
+                    record["hiring_status"] = "No Active Openings"
 
-    except Exception as e:
-        log.debug(f"⚠️ Profile deep-enrichment skipped fields for {source_url}: {e}")
-    finally:
-        profile_page.close()
+            browser.close()
+        except Exception:
+            pass 
+    return record
 
 def discover_companies() -> list[dict]:
     """Extracts live cards, parses structural layers, cleans naming text, and filters rows > $4,000,000."""
-    filtered_records = []
+    initial_records = []
     seen_names = set()
 
     log.info(f"🌐 Sourcing corporate targets directly via YC Hub: {YC_URL}")
@@ -139,21 +165,16 @@ def discover_companies() -> list[dict]:
     with sync_playwright() as pw:
         ua = get_random_user_agent()
         browser = pw.chromium.launch(headless=HEADLESS)
-        ctx = browser.new_context(
-            viewport={"width": 1440, "height": 900}, 
-            user_agent=ua,
-            locale="en-US"
-        )
+        ctx = browser.new_context(viewport={"width": 1440, "height": 900}, user_agent=ua, locale="en-US")
         page = ctx.new_page()
 
         try:
             page.goto(YC_URL, wait_until="networkidle", timeout=60000)
             page.wait_for_timeout(4000)
 
-            # Smoothly scroll down to render hidden components fully
             for _ in range(12):
                 page.evaluate("window.scrollBy(0, window.innerHeight * 2)")
-                page.wait_for_timeout(1200)
+                page.wait_for_timeout(1000)
 
             selectors = ["a._company_sOjN_1", "a[href*='/companies/']"]
             cards = []
@@ -165,7 +186,7 @@ def discover_companies() -> list[dict]:
             log.info(f"   ↳ Core structural interface parsing hit: Found {len(cards)} raw data blocks.")
 
             for card in cards:
-                if len(filtered_records) >= MAX_COMPANIES:
+                if len(initial_records) >= MAX_COMPANIES:
                     break
                 
                 try:
@@ -183,7 +204,6 @@ def discover_companies() -> list[dict]:
                         
                     seen_names.add(clean_name)
                     
-                    # 🟢 Structural Parameter Isolation Formula
                     href = card.get_attribute("href") or ""
                     slug = ""
                     if "/companies/" in href:
@@ -192,15 +212,12 @@ def discover_companies() -> list[dict]:
                     rec = _blank(clean_name)
                     rec["description"] = lines[1] if len(lines) > 1 else "Developing enterprise technological systems infrastructure."
                     
-                    # Form exact clean source landing paths
                     if slug:
                         rec["source_url"] = f"https://www.ycombinator.com/companies/{slug}"
-                        # Set structural name guess baseline prior to profile enrichment validation
                         rec["website"] = f"https://{slug}.com"
                     else:
                         rec["source_url"] = href if href.startswith("http") else f"https://www.ycombinator.com{href}"
                     
-                    # Financial Valuation Extraction Loop
                     funding_found = False
                     for line in lines:
                         match = re.search(r'\$\d+(?:\.\d+)?\s*[mkbMKBR]?', line)
@@ -222,19 +239,25 @@ def discover_companies() -> list[dict]:
                     else:
                         rec["funding_stage"] = "Series A"
 
-                    # Numeric condition restriction verification
                     if rec["funding_int"] > 4_000_000:
-                        # Safely trigger secondary browser context validation loops
-                        _deep_enrich_profile(ctx, rec["source_url"], rec)
-                        filtered_records.append(rec)
+                        initial_records.append(rec)
                     
                 except Exception:
                     continue
 
-        except Exception as e:
-            log.error(f"❌ Funding filter extraction cycle caught an error: {e}")
-        finally:
             browser.close()
 
-    log.info(f"📊 Filtering finalized. Retained {len(filtered_records)} records matching structural criteria thresholds.")
-    return filtered_records
+            # ⚡ HIGH DURABILITY CONCURRENT EXTRACTION ENGINE
+            log.info(f"   ⚡ Processing {len(initial_records)} filtered profiles concurrently with durable text matching...")
+            final_records = []
+            
+            with ThreadPoolExecutor(max_workers=3) as executor:
+                futures = [executor.submit(_enrich_single_profile_thread_safe, record) for record in initial_records]
+                for future in as_completed(futures):
+                    final_records.append(future.result())
+                    
+            return final_records
+
+        except Exception as e:
+            log.error(f"❌ Funding filter extraction cycle caught an error: {e}")
+            return initial_records
